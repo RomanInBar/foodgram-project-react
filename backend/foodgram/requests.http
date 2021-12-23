@@ -1,0 +1,21 @@
+POST http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
+{
+    "email": "Bob@mail.ru",
+    "username": "BobaFett",
+    "first_name": "Boba",
+    "last_name": "Fett",
+    "password": "BobaFettRulezZ1"
+}
+###
+GET http://127.0.0.1:8000/api/users/
+Authorization: Token d01cbf75ab4936df0e8ab222bb298c26db373fd7
+###
+POST http://127.0.0.1:8000/api/auth/token/login/
+Content-Type: application/json
+
+{
+    "password": "BobaFettRulezZ1",
+    "email": "Bob@mail.ru"
+}
