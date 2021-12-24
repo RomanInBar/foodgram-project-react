@@ -19,3 +19,6 @@ Content-Type: application/json
     "password": "BobaFettRulezZ1",
     "email": "Bob@mail.ru"
 }
+###
+GET http://127.0.0.1:8000/api/tags/
+###
