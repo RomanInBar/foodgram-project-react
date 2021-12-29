@@ -1,6 +1,8 @@
+from django.core import validators
 from django.db import models
 from django.db.models import constraints
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator
 
 
 class CustomUser(AbstractUser):
@@ -21,14 +23,14 @@ class CustomUser(AbstractUser):
 
 
 class Follow(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='following', verbose_name='Автор')
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='follower', verbose_name='Подписчики')
-    created_at = models.DateField(auto_now_add=True, verbose_name='Создан')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='follower', verbose_name='Пользователь')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='following', verbose_name='Подписки')
+    created_at = models.DateField(auto_now_add=True, validators=[MinValueValidator(1, message='Значение не может быть меньше 1')], verbose_name='Создан')
 
     class Meta:
         ordering = ('-created_at',)
-        verbose_name = 'Подписчики'
-        verbose_name_plural = 'Подписчики'
+        verbose_name = 'Подписки'
+        verbose_name_plural = 'Подписки'
         constraints = [
             constraints.UniqueConstraint(
                 fields=['author', 'user'],

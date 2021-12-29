@@ -103,3 +103,5 @@ DJOSER = {
         'user': 'users.serializers.CustomUserSerializer',
     }
 }
+
+RECIPES_LIMIT = 6
