@@ -66,7 +66,7 @@ class RecipeIngredient(models.Model):
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    favorited = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:

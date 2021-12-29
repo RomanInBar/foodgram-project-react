@@ -21,7 +21,7 @@ Content-Type: application/json
     "email": "Bob2@mail.ru"
 }
 ###
-GET http://127.0.0.1:8000/api/users/
+GET http://127.0.0.1:8000/api/recipes/1/favorite/
 Authorization: Token 9560a5ca2280ad7fc65596274dae12fdbc1c7d99
 ###
 GET http://127.0.0.1:8000/api/users/subscriptions/

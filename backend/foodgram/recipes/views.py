@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -23,15 +23,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
 
 
-    @action(methods=['GET', 'DELETE'], url_path='favorite', url_name='favorite', detail=True)
+    @action(methods=['GET', 'DELETE'], url_path='favorite', url_name='favorite', detail=True, permission_classes=(permissions.IsAuthenticated,))
     def favorite(self, request, pk):
-        user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
-        serializer = FavoriteSerializer(data={'user': user.id, 'favorited': recipe.id})
+        serializer = FavoriteSerializer(data={'user': request.user.id, 'recipe': recipe.id})
         if request.method == 'GET':
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response('Добавлено в избранное', status=status.HTTP_201_CREATED)
-        favorite = get_object_or_404(Favorite, user=user.id, favorited=recipe.id)
+            serializer.save(recipe=recipe, user=request.user)
+            serializer = RecipeSerializer(recipe)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        favorite = get_object_or_404(Favorite, user=request.user.id, recipe__id=pk)
         favorite.delete()
-        return Response('Удалено из избранного', status=status.HTTP_204_NO_CONTENT)
+        return Response(f'{recipe.name} - удалено из избранного', status=status.HTTP_204_NO_CONTENT)

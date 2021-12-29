@@ -17,10 +17,24 @@ class IngredientSerialiser(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = '__all__'
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    user = serializers.IntegerField(source='user.id')
+    recipe = serializers.IntegerField(source='recipe.id')
+
     class Meta:
         model = Favorite
-        fields = '__all__'
+        fields = ('user', 'recipe')
+
+    def validate(self, data):
+        user = data['user']['id']
+        recipe= data['recipe']['id']
+        if Favorite.objects.filter(user=user, recipe__id=recipe).exists():
+            raise serializers.ValidationError(
+                {
+                    "errors": "Нельзя повторно добавить в избранное"
+                }
+            ) 
+        return data
