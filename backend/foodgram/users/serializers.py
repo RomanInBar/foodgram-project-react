@@ -53,7 +53,7 @@ class FollowSerializer(serializers.ModelSerializer):
         return Follow.objects.create(user=user, author=author)
 
 
-class RecipeSubscriptionSerializer(serializers.ModelSerializer):
+class RecipeSubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ["id", "name", "image", "cooking_time"]
@@ -73,4 +73,4 @@ class ShowFollowSerializer(CustomUserSerializer):
 
     def get_recipes(self, obj):
         recipes = obj.recipes.all()[:settings.RECIPES_LIMIT]
-        return RecipeSubscriptionSerializer(recipes, many=True).data
+        return RecipeSubSerializer(recipes, many=True).data

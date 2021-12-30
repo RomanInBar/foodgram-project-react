@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from users.models import Follow
 
-from .serializers import CustomUserSerializer, FollowSerializer, ShowFollowSerializer
+from .serializers import FollowSerializer, ShowFollowSerializer
 
 
 User = get_user_model()

@@ -17,31 +17,67 @@ POST http://127.0.0.1:8000/api/auth/token/login/
 Content-Type: application/json
 
 {
-    "password": "BobaFettRulezZ12222",
-    "email": "Bob2@mail.ru"
+    "password": "BobaFettRulezZ1",
+    "email": "Bob@mail.ru"
 }
 ###
-GET http://127.0.0.1:8000/api/recipes/1/favorite/
-Authorization: Token 9560a5ca2280ad7fc65596274dae12fdbc1c7d99
+GET http://127.0.0.1:8000/api/recipes/1/
+Authorization: Token ca42978e710503024853c854f6bcf6d8987fc2a4
 ###
-GET http://127.0.0.1:8000/api/users/subscriptions/
-Authorization: Token 9560a5ca2280ad7fc65596274dae12fdbc1c7d99
+PUT http://127.0.0.1:8000/api/recipes/1/
+Authorization: Token ca42978e710503024853c854f6bcf6d8987fc2a4
+Content-Type: application/json
+
+{
+
+    "ingredients": 
+
+[
+
+    {
+        "id": 1,
+        "amount": 10
+    }
+
+],
+"tags": 
+
+    [
+        1,
+        2
+    ],
+    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+    "name": "string",
+    "text": "string",
+    "cooking_time": 1
+
+}
+###
+GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
+Authorization: Token ca42978e710503024853c854f6bcf6d8987fc2a4
 ###
 DELETE http://127.0.0.1:8000/api/users/3/subscribe/
 Authorization: Token 9560a5ca2280ad7fc65596274dae12fdbc1c7d99
 ###
-POST http://127.0.0.1:8000/api/recipes/
-Authorization: Token 9560a5ca2280ad7fc65596274dae12fdbc1c7d99
+PUT http://127.0.0.1:8000/api/recipes/38/
+Authorization: Token ca42978e710503024853c854f6bcf6d8987fc2a4
 Content-Type: application/json
 
 {
-    "ingredients": [
-        {
-            "id": 3,
-            "amount": 2
-        }
-    ],
-    "tags": [
+
+    "ingredients": 
+
+[
+
+    {
+        "id": 1,
+        "amount": 201
+    }
+
+],
+"tags": 
+
+    [
         1,
         2
     ],

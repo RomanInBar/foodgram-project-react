@@ -53,7 +53,7 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredient')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='recipe_ingredient')
-    amount = models.PositiveSmallIntegerField(validators=[MinValueValidator(1, 'Минимальное значение 1')])
+    amount = models.PositiveSmallIntegerField(validators=[MinValueValidator(1, 'Минимальное значение 1')], default=1, verbose_name='Количество')
 
     class Meta:
         ordering = ('recipe',)
@@ -80,7 +80,7 @@ class Favorite(models.Model):
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    shopping_cart = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
