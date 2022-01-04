@@ -6,16 +6,26 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from users.serializers import RecipeSubSerializer
 
 from .filters import RecipeFilter
-from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                     ShoppingCart, Tag)
+from .models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from .permissions import IsRecipeOwnerOrReadOnly
-from .serializers import (FavoriteSerializer, IngredientSerialiser,
-                          RecipeReadSerializer, RecipeWriteSerializer,
-                          ShoppingCartSerializer, TagSerializer)
+from .serializers import (
+    FavoriteSerializer,
+    IngredientSerialiser,
+    RecipeReadSerializer,
+    RecipeWriteSerializer,
+    ShoppingCartSerializer,
+    TagSerializer,
+)
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -73,25 +83,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def download_shopping_cart(request):
-    user = request.user
-    cart = user.shoppingcart_set.all()
+    recipes = request.user.shoppingcart.all().values_list('recipe', flat=True)
+    ingredients = (
+        RecipeIngredient.objects.filter(recipe__in=recipes)
+        .all()
+        .values_list('ingredient', flat=True)
+    )
     buying_list = {}
-    for item in cart:
-        recipe = item.recipe
-        ingredients_in_recipe = RecipeIngredient.objects.filter(recipe=recipe)
-        for item in ingredients_in_recipe:
-            amount = item.amount
-            name = item.ingredient.name
-            measurement_unit = item.ingredient.measurement_unit
-            if name not in buying_list:
-                buying_list[name] = {
-                    'amount': amount,
-                    'measurement_unit': measurement_unit,
-                }
-            else:
-                buying_list[name]['amount'] = (
-                    buying_list[name]['amount'] + amount
-                )
+    for ingredient in ingredients:
+        name = ingredient.ingredient.name
+        amount = ingredient.amount
+        unit = ingredient.ingredient.measurement_unit
+        if name not in buying_list:
+            buying_list[name] = {'amount': amount, 'unit': unit}
+        else:
+            buying_list[name]['amount'] = buying_list[name]['amount'] + amount
     shopping_list = []
     for item in buying_list:
         shopping_list.append(
