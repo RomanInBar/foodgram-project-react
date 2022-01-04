@@ -1,11 +1,18 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SEKRET_KEY')
-
 DEBUG = True
+
+if DEBUG:
+    SECRET_KEY = 'debug'
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
