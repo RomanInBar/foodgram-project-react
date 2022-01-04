@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from users.models import Follow
 
 from .serializers import FollowSerializer, ShowFollowSerializer
+from .permissions import IsAuthorOnly
 
 
 User = get_user_model()
@@ -16,7 +17,7 @@ User = get_user_model()
 
 class CustomUserViewSet(UserViewSet):
 
-    @action(methods=['GET'], detail=False, url_path='subscriptions', url_name='subscriptions', permission_classes=(permissions.IsAuthenticated,))
+    @action(methods=['GET'], detail=False, url_path='subscriptions', url_name='subscriptions', permission_classes=(IsAuthorOnly,))
     def subscriptions(self, request):
         user = User.objects.filter(following__user=request.user)
         paginator = PageNumberPagination()

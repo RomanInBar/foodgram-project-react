@@ -33,6 +33,7 @@ class RecipeIngredientCreate(RecipeIngrediensSerialiser):
     id = serializers.IntegerField(write_only=True)
     amount = serializers.IntegerField(write_only=True)
 
+
     def validate_amount(self, amount):
         if amount < 1:
             raise serializers.ValidationError(

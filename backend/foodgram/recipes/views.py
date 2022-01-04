@@ -8,8 +8,9 @@ from rest_framework.response import Response
 from .models import RecipeIngredient, ShoppingCart, Tag, Recipe, Ingredient, Favorite
 from .serializers import TagSerializer, IngredientSerialiser, FavoriteSerializer, ShoppingCartSerializer, RecipeWriteSerializer, RecipeReadSerializer
 from users.serializers import RecipeSubSerializer
-from .permissions import AdminOrAuthorOrReadOnly
+from .permissions import IsRecipeOwnerOrReadOnly
 from rest_framework.pagination import PageNumberPagination
+from .filters import RecipeFilter
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -28,8 +29,9 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = (AdminOrAuthorOrReadOnly,)
+    permission_classes = (IsRecipeOwnerOrReadOnly,)
     pagination_class = PageNumberPagination
+    filter_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:
