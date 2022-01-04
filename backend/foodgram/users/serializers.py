@@ -1,10 +1,12 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.generics import get_object_or_404
-from .models import Follow
+
 from recipes.models import Recipe
-from django.contrib.auth import get_user_model
-from django.conf import settings
+
+from .models import Follow
 
 User = get_user_model()
 
@@ -14,8 +16,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name',
-                  'last_name', 'is_subscribed')
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+        )
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -65,12 +73,21 @@ class ShowFollowSerializer(CustomUserSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'is_subscribed', 'recipes', 'recipes_count')
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
 
     def get_recipes_count(self, obj):
         recipes = Recipe.objects.filter(author=obj).count()
         return recipes
 
     def get_recipes(self, obj):
-        recipes = obj.recipes.all()[:settings.RECIPES_LIMIT]
+        recipes = obj.recipes.all()[: settings.RECIPES_LIMIT]
         return RecipeSubSerializer(recipes, many=True).data

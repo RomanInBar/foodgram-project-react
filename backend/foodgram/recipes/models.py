@@ -1,14 +1,18 @@
-from django.core import validators
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.core import validators
 from django.core.validators import MinValueValidator
+from django.db import models
 
 User = get_user_model()
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=150, unique=True, verbose_name='Название')
-    measurement_unit = models.CharField(max_length=10, verbose_name='Единицы измерения')
+    name = models.CharField(
+        max_length=150, unique=True, verbose_name='Название'
+    )
+    measurement_unit = models.CharField(
+        max_length=10, verbose_name='Единицы измерения'
+    )
 
     class Meta:
         verbose_name = 'Ингрединет'
@@ -32,14 +36,28 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
-    ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient', verbose_name='Ингредиенты')
-    tags =  models.ManyToManyField(Tag, verbose_name='Таг')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes', verbose_name='Автор')
+    ingredients = models.ManyToManyField(
+        Ingredient, through='RecipeIngredient', verbose_name='Ингредиенты'
+    )
+    tags = models.ManyToManyField(Tag, verbose_name='Таг')
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='recipes',
+        verbose_name='Автор',
+    )
     image = models.ImageField()
-    name =  models.CharField(max_length=256, verbose_name='Название')
+    name = models.CharField(max_length=256, verbose_name='Название')
     text = models.CharField(max_length=256, verbose_name='Описание')
-    cooking_time = models.PositiveSmallIntegerField(validators=[MinValueValidator(1, message='Значение не может быть меньше 1')], verbose_name='Время готовки')
-    create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан', null=True)
+    cooking_time = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1, message='Значение не может быть меньше 1')
+        ],
+        verbose_name='Время готовки',
+    )
+    create_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Создан', null=True
+    )
 
     class Meta:
         ordering = ('name', 'author')
@@ -51,9 +69,17 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredient')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='recipe_ingredient')
-    amount = models.PositiveSmallIntegerField(validators=[MinValueValidator(1, 'Минимальное значение 1')], default=1, verbose_name='Количество')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='recipe_ingredient'
+    )
+    ingredient = models.ForeignKey(
+        Ingredient, on_delete=models.CASCADE, related_name='recipe_ingredient'
+    )
+    amount = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1, 'Минимальное значение 1')],
+        default=1,
+        verbose_name='Количество',
+    )
 
     class Meta:
         ordering = ('recipe',)

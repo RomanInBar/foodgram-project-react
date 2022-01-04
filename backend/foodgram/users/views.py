@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
-from rest_framework import status, permissions
+from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
@@ -8,16 +8,20 @@ from rest_framework.response import Response
 
 from users.models import Follow
 
-from .serializers import FollowSerializer, ShowFollowSerializer
 from .permissions import IsAuthorOnly
-
+from .serializers import FollowSerializer, ShowFollowSerializer
 
 User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
-
-    @action(methods=['GET'], detail=False, url_path='subscriptions', url_name='subscriptions', permission_classes=(IsAuthorOnly,))
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_path='subscriptions',
+        url_name='subscriptions',
+        permission_classes=(IsAuthorOnly,),
+    )
     def subscriptions(self, request):
         user = User.objects.filter(following__user=request.user)
         paginator = PageNumberPagination()
@@ -26,7 +30,13 @@ class CustomUserViewSet(UserViewSet):
         serializer = ShowFollowSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-    @action(methods=['GET', 'DELETE'], url_name='subscribe', url_path='subscribe', detail=True, permission_classes=(permissions.IsAuthenticated,))
+    @action(
+        methods=['GET', 'DELETE'],
+        url_name='subscribe',
+        url_path='subscribe',
+        detail=True,
+        permission_classes=(permissions.IsAuthenticated,),
+    )
     def subscribe(self, request, id):
         user = self.request.user
         author = get_object_or_404(User, id=id)

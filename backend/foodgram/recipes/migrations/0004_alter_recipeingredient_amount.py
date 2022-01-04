@@ -7,13 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('recipes', '0003_rename_shopping_cart_shoppingcart_recipe'),
+        ('recipes', '0003_rename_shopping_cart_shoppingcart_recipe')
     ]
 
     operations = [
         migrations.AlterField(
             model_name='recipeingredient',
             name='amount',
-            field=models.PositiveSmallIntegerField(default=1, validators=[django.core.validators.MinValueValidator(1, 'Минимальное значение 1')], verbose_name='Количество'),
-        ),
+            field=models.PositiveSmallIntegerField(
+                default=1,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        1, 'Минимальное значение 1'
+                    )
+                ],
+                verbose_name='Количество',
+            ),
+        )
     ]
