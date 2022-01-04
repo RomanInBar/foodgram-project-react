@@ -85,8 +85,7 @@ class ShowFollowSerializer(CustomUserSerializer):
         )
 
     def get_recipes_count(self, obj):
-        recipes = Recipe.objects.filter(author=obj).count()
-        return recipes
+        return Recipe.objects.filter(author=obj).count()
 
     def get_recipes(self, obj):
         recipes = obj.recipes.all()[: settings.RECIPES_LIMIT]
