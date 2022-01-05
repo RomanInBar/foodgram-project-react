@@ -7,7 +7,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from users.models import Follow
-
 from .permissions import IsAuthorOnly
 from .serializers import FollowSerializer, ShowFollowSerializer
 

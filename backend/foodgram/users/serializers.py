@@ -5,7 +5,6 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.generics import get_object_or_404
 
 from recipes.models import Recipe
-
 from .models import Follow
 
 User = get_user_model()
