@@ -13,6 +13,5 @@ ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=postgres
 ENV DB_HOST=db
 ENV DB_PORT=5432
-ENV SECRET_KEY=django-insecure-&-x7n+sy==o&kkh^nmknpzmnlds$42o4h7e4rlbq_l6@znb%*a
 
 LABEL file="backend-dokerfile" author="barabinr@list.ru"
