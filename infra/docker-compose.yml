@@ -9,7 +9,7 @@ services:
     restart: always
   
   backend:
-    image: roman532/diplom-back:latest
+    image: robin532/diplom-back:v1.0
     restart: always
     volumes:
       - static_data:/diplom/static/
@@ -21,7 +21,7 @@ services:
 
 
   frontend:
-    image: roman532/diplom-front:latest
+    image: robin532/diplom-front:v1.0
     volumes:
       - frontend_data:/app/build/
 
@@ -34,8 +34,8 @@ services:
       - frontend_data:/usr/share/nginx/html/
       - ./docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
       - ./docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
-      - static_data:/diplom/static/
-      - media_data:/diplom/media/
+      - static_data:/var/html/static/
+      - media_data:/var/html/media/
     restart: always
     depends_on:
       - backend
