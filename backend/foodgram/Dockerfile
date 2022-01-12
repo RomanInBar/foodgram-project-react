@@ -1,7 +1,9 @@
-FROM python:3.8.5
-WORKDIR /diplom
+FROM python:3.9
+WORKDIR /code
+COPY requirements.txt .
+RUN python3 -m pip install --upgrade pip \
+    && pip3 install -r /code/requirements.txt --no-cache-dir
 COPY . .
-RUN pip install --upgrade pip && pip install -r /diplom/requirements.txt
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
