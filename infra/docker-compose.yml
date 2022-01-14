@@ -10,18 +10,14 @@ services:
     restart: always
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: robin532/diplom-front:v1.0
     volumes:
       - frontend_data:/app/build/
     depends_on:
       - db
 
   web:
-    build:
-      context: ../backend/foodgram
-      dockerfile: Dockerfile
+    image: robin532/diplom-back:v1.0
     restart: always
     volumes:
       - static_value:/code/static/

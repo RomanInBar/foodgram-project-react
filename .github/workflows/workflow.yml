@@ -1,4 +1,4 @@
-name: Diplom
+name: diplom
 on:
   push:
     branches: [ master ]
