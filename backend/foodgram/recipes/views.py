@@ -9,23 +9,12 @@ from rest_framework.views import APIView
 
 from users.serializers import RecipeSubSerializer
 from .filters import RecipeFilter
-from .models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Tag,
-)
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 from .permissions import IsRecipeOwnerOrReadOnly
-from .serializers import (
-    FavoriteSerializer,
-    IngredientSerialiser,
-    RecipeReadSerializer,
-    RecipeWriteSerializer,
-    ShoppingCartSerializer,
-    TagSerializer,
-)
+from .serializers import (FavoriteSerializer, IngredientSerialiser,
+                          RecipeReadSerializer, RecipeWriteSerializer,
+                          ShoppingCartSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
