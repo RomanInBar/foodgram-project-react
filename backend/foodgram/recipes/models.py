@@ -14,6 +14,7 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        ordering = ('name',)
         verbose_name = 'Ингрединет'
         verbose_name_plural = 'Ингрединенты'
 
@@ -27,8 +28,8 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=200, verbose_name='Слаг', unique=True)
 
     class Meta:
-        verbose_name = 'Слаг'
-        verbose_name_plural = 'Слаг'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категория'
 
     def __str__(self) -> str:
         return self.slug
@@ -59,7 +60,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ('name', 'author')
+        ordering = ('-create_at',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 

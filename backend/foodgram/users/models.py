@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import constraints
 
@@ -38,9 +37,6 @@ class Follow(models.Model):
     )
     created_at = models.DateField(
         auto_now_add=True,
-        validators=[
-            MinValueValidator(1, message='Значение не может быть меньше 1')
-        ],
         verbose_name='Создан',
     )
 
