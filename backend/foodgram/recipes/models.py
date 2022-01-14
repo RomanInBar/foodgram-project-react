@@ -98,10 +98,10 @@ class RecipeIngredient(models.Model):
 
 class Favorite(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name='Пользователь'
+        User, on_delete=models.CASCADE, related_name='favorite', verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name='Рецепт'
+        Recipe, on_delete=models.CASCADE, related_name='in_favorite', verbose_name='Рецепт'
     )
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 

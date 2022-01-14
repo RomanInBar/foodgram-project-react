@@ -6,7 +6,7 @@ from users import models
 @admin.register(models.CustomUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'username', 'email')
-    search_fields = ('username__startswith',)
+    list_filter = ('username', 'email')
 
 
 @admin.register(models.Follow)
