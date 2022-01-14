@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from recipes import models
 
 
@@ -39,4 +40,3 @@ class FavoriteAdmin(admin.ModelAdmin):
 @admin.register(models.ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'recipe', 'create_at')
-    
