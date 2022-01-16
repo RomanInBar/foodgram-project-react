@@ -5,9 +5,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = False
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-&-x7n+sy==o&kkh^nmknpzmnlds$42o4h7e4rlbq_l6@znb%*a')
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    default='django-insecure-&-x7n+sy==o&kkh^nmknpzmnlds$42o4h7e4rlbq_l6@znb%*a',
+)
 
-ALLOWED_HOSTS = ['62.84.127.47', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
@@ -57,15 +60,16 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('ENGINE', default='django.db.backends.postgresql'),
+        'ENGINE': os.environ.get(
+            'ENGINE', default='django.db.backends.postgresql'
+        ),
         'NAME': os.environ.get('DB_NAME', default='postgres'),
         'USER': os.environ.get('DB_USER', default='postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', default='postgres'),
         'HOST': os.environ.get('DB_HOST', default='db'),
-        'PORT': os.environ.get('DB_PORT', default=5432)
+        'PORT': os.environ.get('DB_PORT', default=5432),
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {

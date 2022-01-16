@@ -28,6 +28,7 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=200, verbose_name='Слаг', unique=True)
 
     class Meta:
+        ordering = ('id',)
         verbose_name = 'Категория'
         verbose_name_plural = 'Категория'
 
@@ -65,7 +66,7 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self) -> str:
-        return f'{self.name} - {self.author}'
+        return self.name
 
 
 class RecipeIngredient(models.Model):
@@ -133,7 +134,10 @@ class ShoppingCart(models.Model):
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name='Рецепт'
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='customers',
+        verbose_name='Рецепт',
     )
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
@@ -148,4 +152,4 @@ class ShoppingCart(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f'{self.user} {self.shoping_cart}'
+        return f'{self.user} {self.recipe}'

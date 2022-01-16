@@ -35,10 +35,7 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='Подписки',
     )
-    created_at = models.DateField(
-        auto_now_add=True,
-        verbose_name='Создан',
-    )
+    created_at = models.DateField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
         ordering = ('-created_at',)

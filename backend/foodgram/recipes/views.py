@@ -1,6 +1,7 @@
-from django.http.response import HttpResponse
+import django_filters.rest_framework as django_filters
+from django.http import HttpResponse
 from rest_framework import status, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -8,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.serializers import RecipeSubSerializer
-from .filters import RecipeFilter
+from .filters import IngredientNameFilter, RecipeFilter
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
 from .permissions import IsRecipeOwnerOrReadOnly
@@ -29,12 +30,14 @@ class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerialiser
     permission_classes = (AllowAny,)
     pagination_class = None
+    filter_class = IngredientNameFilter
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsRecipeOwnerOrReadOnly,)
     pagination_class = PageNumberPagination
+    filter_backends = [django_filters.DjangoFilterBackend]
     filter_class = RecipeFilter
 
     def get_serializer_class(self):
@@ -68,36 +71,39 @@ class RecipeViewSet(viewsets.ModelViewSet):
             status=status.HTTP_204_NO_CONTENT,
         )
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def download_shopping_cart(request):
-    recipes = request.user.shoppingcart.all().values_list('recipe', flat=True)
-    ingredients = (
-        RecipeIngredient.objects.filter(recipe__in=recipes)
-        .all()
-        .values_list('ingredient', flat=True)
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_name='download_shopping_cart',
+        url_path='download_shopping_cart',
+        permission_classes=(IsAuthenticated,),
     )
-    buying_list = {}
-    for ingredient in ingredients:
-        name = ingredient.ingredient.name
-        amount = ingredient.amount
-        unit = ingredient.ingredient.measurement_unit
-        if name not in buying_list:
-            buying_list[name] = {'amount': amount, 'unit': unit}
-        else:
-            buying_list[name]['amount'] = buying_list[name]['amount'] + amount
-    shopping_list = []
-    for item in buying_list:
-        shopping_list.append(
-            f'{item} - {buying_list[item]["amount"]}, '
-            f'{buying_list[item]["measurement_unit"]}\n'
+    def download_shopping_cart(self, request):
+        user = self.request.user
+        recipes = user.shoppingcart.all().values_list('recipe', flat=True)
+        ingredients = RecipeIngredient.objects.filter(recipe__in=recipes)
+        buying_list = {}
+        for ingredient in ingredients:
+            name = ingredient.ingredient.name
+            amount = ingredient.amount
+            unit = ingredient.ingredient.measurement_unit
+            if name not in buying_list:
+                buying_list[name] = {'amount': amount, 'unit': unit}
+            else:
+                buying_list[name]['amount'] = (
+                    buying_list[name]['amount'] + amount
+                )
+        shopping_list = []
+        for item in buying_list:
+            shopping_list.append(
+                f'{item} - {buying_list[item]["amount"]}, '
+                f'{buying_list[item]["unit"]}\n'
+            )
+        response = HttpResponse(shopping_list, 'Content-Type: text/plain')
+        response['Content-Disposition'] = (
+            'attachment;' 'filename="shopping_list.txt"'
         )
-    response = HttpResponse(shopping_list, 'Content-Type: text/plain')
-    response['Content-Disposition'] = (
-        'attachment;' 'filename="shopping_list.txt"'
-    )
-    return response
+        return response
 
 
 class ShoppingCartView(APIView):

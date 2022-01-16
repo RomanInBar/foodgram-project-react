@@ -2,8 +2,8 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from users.serializers import CustomUserSerializer
 
+from users.serializers import CustomUserSerializer
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
 
@@ -145,6 +145,12 @@ class FavoriteSerializer(serializers.ModelSerializer):
             )
         return data
 
+    def create(self, validated_data):
+        user = validated_data["user"]
+        recipe = validated_data["recipe"]
+        Favorite.objects.get_or_create(user=user, recipe=recipe)
+        return validated_data
+
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
     user = serializers.IntegerField(source='user.id')
@@ -167,4 +173,4 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         user = validated_data['user']
         recipe = validated_data['recipe']
         ShoppingCart.objects.get_or_create(user=user, recipe=recipe)
-        return validated_data
+        return
