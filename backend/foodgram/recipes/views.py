@@ -1,9 +1,8 @@
-import django_filters.rest_framework as django_filters
+from django_filters import rest_framework as filters
 from django.http import HttpResponse
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,6 +15,7 @@ from .permissions import IsRecipeOwnerOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerialiser,
                           RecipeReadSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, TagSerializer)
+from .paginators import CustomPageNumberPaginator
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -34,11 +34,30 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
-    permission_classes = (IsRecipeOwnerOrReadOnly,)
-    pagination_class = PageNumberPagination
-    filter_backends = [django_filters.DjangoFilterBackend]
+    filter_backends = (filters.DjangoFilterBackend,)
     filter_class = RecipeFilter
+    permission_classes = (IsRecipeOwnerOrReadOnly,)
+    pagination_class = CustomPageNumberPaginator
+
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+        user = self.request.user
+        is_in_shopping_cart = self.request.query_params.get(
+            "is_in_shopping_cart"
+        )
+        is_favorited = self.request.query_params.get("is_favorited")
+        cart = ShoppingCart.objects.filter(user=user)
+        favorite = Favorite.objects.filter(user=user)
+
+        if is_in_shopping_cart == "true":
+            queryset = queryset.filter(customers__in=cart)
+        elif is_in_shopping_cart == "false":
+            queryset = queryset.exclude(customers__in=cart)
+        if is_favorited == "true":
+            queryset = queryset.filter(in_favorite__in=favorite)
+        elif is_favorited == "false":
+            queryset = queryset.exclude(in_favorite__in=favorite)
+        return queryset.all()
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:

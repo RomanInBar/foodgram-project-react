@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
@@ -87,5 +86,5 @@ class ShowFollowSerializer(CustomUserSerializer):
         return Recipe.objects.filter(author=obj).count()
 
     def get_recipes(self, obj):
-        recipes = obj.recipes.all()[: settings.RECIPES_LIMIT]
+        recipes = obj.recipes.all()
         return RecipeSubSerializer(recipes, many=True).data

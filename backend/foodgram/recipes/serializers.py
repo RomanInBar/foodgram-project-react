@@ -51,7 +51,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True
     )
     author = CustomUserSerializer(read_only=True)
-    image = Base64ImageField(max_length=None, use_url=True)
+    image = Base64ImageField(max_length=None, required=True, use_url=True)
     ingredients = RecipeIngredientCreate(many=True)
 
     class Meta:
@@ -113,8 +113,19 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         if 'tags' in self.initial_data:
             tags = validated_data.pop('tags')
             instance.tags.set(tags)
-
-        super().update(instance, validated_data)
+        instance.name = validated_data.get(
+            'name', instance.name
+        )
+        instance.text = validated_data.get(
+            'text', instance.text
+        )
+        instance.cooking_time = validated_data.get(
+            'cooking_time', instance.cooking_time
+        )
+        instance.image = validated_data.get(
+            'image', instance.image
+        )
+        instance.save()
         return instance
 
 
@@ -163,14 +174,16 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
     def validate(self, data):
         user = data['user']['id']
         recipe = data['recipe']['id']
-        if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
+        if ShoppingCart.objects.filter(user=user, recipe__id=recipe).exists():
             raise serializers.ValidationError(
-                {'errors': 'Вы уже добавили рецепт в корзину'}
+                {
+                    "errors": "Вы уже добавили рецепт в корзину"
+                }
             )
         return data
 
     def create(self, validated_data):
-        user = validated_data['user']
-        recipe = validated_data['recipe']
+        user = validated_data["user"]
+        recipe = validated_data["recipe"]
         ShoppingCart.objects.get_or_create(user=user, recipe=recipe)
-        return
+        return validated_data
