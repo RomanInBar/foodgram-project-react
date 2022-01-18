@@ -1,5 +1,5 @@
-from django_filters import rest_framework as filters
 from django.http import HttpResponse
+from django_filters import rest_framework as filters
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -11,11 +11,11 @@ from users.serializers import RecipeSubSerializer
 from .filters import IngredientNameFilter, RecipeFilter
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
+from .paginators import CustomPageNumberPaginator
 from .permissions import IsRecipeOwnerOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerialiser,
                           RecipeReadSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, TagSerializer)
-from .paginators import CustomPageNumberPaginator
 
 
 class TagViewSet(viewsets.ModelViewSet):

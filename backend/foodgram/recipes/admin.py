@@ -9,6 +9,11 @@ class RecipeIngredientsInLine(admin.TabularInline):
     extra = 1
 
 
+@admin.register(models.RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ingredient', 'recipe', 'amount')
+
+
 @admin.register(models.Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('author', 'name', 'text', 'create_at', 'favorite')

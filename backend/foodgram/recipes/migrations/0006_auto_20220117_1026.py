@@ -15,21 +15,37 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='tag',
-            options={'ordering': ('id',), 'verbose_name': 'Категория', 'verbose_name_plural': 'Категория'},
+            options={
+                'ordering': ('id',),
+                'verbose_name': 'Категория',
+                'verbose_name_plural': 'Категория',
+            },
         ),
         migrations.AlterField(
             model_name='favorite',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favorite', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='favorite',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Пользователь',
+            ),
         ),
         migrations.AlterField(
             model_name='recipe',
             name='image',
-            field=models.ImageField(upload_to='media/', verbose_name='Картинка'),
+            field=models.ImageField(
+                upload_to='media/', verbose_name='Картинка'
+            ),
         ),
         migrations.AlterField(
             model_name='shoppingcart',
             name='recipe',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='customers', to='recipes.recipe', verbose_name='Рецепт'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='customers',
+                to='recipes.recipe',
+                verbose_name='Рецепт',
+            ),
         ),
     ]
