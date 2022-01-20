@@ -98,7 +98,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             try:
                 obj = RecipeIngredient.objects.get(
                     id=ingredient['id'],
-                    amount=ingredient['amount']   
+                    amount=ingredient['amount']
                 ).ingredient
             except RecipeIngredient.DoesNotExist:
                 obj = Ingredient.objects.get(id=ingredient['id'])
@@ -106,7 +106,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 if obj in update:
                     update[obj] += ingredient['amount']
                 else:
-                    update[obj] = ingredient['amount']          
+                    update[obj] = ingredient['amount']
         instance.ingredients.clear()
         for obj, amount in update.items():
             RecipeIngredient.objects.create(
