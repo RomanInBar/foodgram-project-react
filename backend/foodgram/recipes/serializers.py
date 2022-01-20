@@ -95,16 +95,18 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         update = {}
         for ingredient in ingredients_data:
-            if RecipeIngredient.objects.filter(
-                id=ingredient['id'], amount=ingredient['amount']
-            ).exists():
+            try:
                 obj = RecipeIngredient.objects.get(
-                    id=ingredient['id'], amount=ingredient['amount']
+                    id=ingredient['id'],
+                    amount=ingredient['amount']   
                 ).ingredient
-                update[obj] = ingredient['amount']
-            else:
+            except RecipeIngredient.DoesNotExist:
                 obj = Ingredient.objects.get(id=ingredient['id'])
-                update[obj] = ingredient['amount']
+            finally:
+                if obj in update:
+                    update[obj] += ingredient['amount']
+                else:
+                    update[obj] = ingredient['amount']          
         instance.ingredients.clear()
         for obj, amount in update.items():
             RecipeIngredient.objects.create(
