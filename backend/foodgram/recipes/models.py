@@ -7,10 +7,12 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=150, unique=True, verbose_name='Название'
+        max_length=150, unique=True, verbose_name='Название',
+        help_text='Введите название ингредиента'
     )
     measurement_unit = models.CharField(
-        max_length=10, verbose_name='Единицы измерения'
+        max_length=10, verbose_name='Единицы измерения',
+        help_text='Введите единицу измерения'
     )
 
     class Meta:
@@ -23,9 +25,18 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=256, verbose_name='Название')
-    color = models.CharField(max_length=150, verbose_name='Цвет')
-    slug = models.SlugField(max_length=200, verbose_name='Слаг', unique=True)
+    name = models.CharField(
+        max_length=256, verbose_name='Название',
+        help_text='Введите категирию приёма ("завтрак", "обед" и т.п.)'
+    )
+    color = models.CharField(
+        max_length=150, verbose_name='Цвет',
+        help_text='Введите цвет в кодировке "HEX"'
+    )
+    slug = models.SlugField(
+        max_length=200, verbose_name='Слаг', unique=True,
+        help_text='Введите уникальное название для категории, на английском'
+    )
 
     class Meta:
         ordering = ('id',)
@@ -47,7 +58,7 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Автор',
     )
-    image = models.ImageField(upload_to='media/', verbose_name='Картинка')
+    image = models.ImageField(verbose_name='Картинка')
     name = models.CharField(max_length=256, verbose_name='Название')
     text = models.CharField(max_length=256, verbose_name='Описание')
     cooking_time = models.PositiveSmallIntegerField(
