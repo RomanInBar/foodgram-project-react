@@ -1,7 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from users.serializers import CustomUserSerializer, RecipeSubSerializer
+from users.serializers import CustomUserSerializer
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
 
@@ -35,7 +35,7 @@ class RecipeIngredientSerialiser(serializers.ModelSerializer):
 class RecipeIngredientCreate(RecipeIngredientSerialiser):
     id = serializers.IntegerField(write_only=True)
     amount = serializers.IntegerField(write_only=True)
-        
+
     def validate_amount(self, amount):
         if amount < 1:
             raise serializers.ValidationError('Значение должно быть больше 0')
@@ -113,14 +113,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 ingredient=obj, amount=amount, recipe=instance
             )
         instance.tags.set(tags_data)
-        instance.name = validated_data.get('name', instance.name)
-        instance.text = validated_data.get('text', instance.text)
-        instance.image = validated_data.get('image', instance.image)
-        instance.cooking_time = validated_data.get(
-            'cooking_time', instance.cooking_time
-        )
-        instance.save()
-        return instance
+        return super().update(instance, validated_data)
 
 
 class RecipeReadSerializer(RecipeWriteSerializer):
