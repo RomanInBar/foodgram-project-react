@@ -42,10 +42,6 @@ email: `admin@mail.ru`
 username: `admin`   
 password: `admin`  
 
-## Автор  
-[Барабин Роман](https://github.com/RomanInBar)  
-[Сайт](http://51.250.68.0)
-
 
 
 
